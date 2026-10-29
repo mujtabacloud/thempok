@@ -3,8 +3,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ThemeCard from '../../components/ThemeCard.astro';
 import Icon from '../../components/Icon.astro';
 import Badge from '../../components/Badge.astro';
-import { themesData, themeCategories } from '../../data/themes';
+import { getAllThemes, themeCategories } from '../../utils/content';
 
+const themesData = await getAllThemes();
 const totalThemes = themesData.length;
 ---
 

@@ -5,24 +5,29 @@ import ThemeCard from '../../components/ThemeCard.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
-import { themesData, type Theme } from '../../data/themes';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getAllThemes, type Theme } from '../../utils/content';
 import { getRelativePath } from '../../data/site';
 
-export function getStaticPaths() {
-  return themesData.map((theme) => ({
-    params: { slug: theme.slug },
-    props: { theme },
+export async function getStaticPaths() {
+  const themeEntries = await getCollection('themes');
+  return themeEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
   }));
 }
 
 interface Props {
-  theme: Theme;
+  entry: CollectionEntry<'themes'>;
 }
 
-const { theme } = Astro.props;
+const { entry } = Astro.props;
+const theme: Theme = { id: entry.id, slug: entry.id, ...entry.data };
+const { Content } = await render(entry);
 
 // Related themes: same category or featured, excluding current
-const relatedThemes = themesData
+const allThemesList = await getAllThemes();
+const relatedThemes = allThemesList
   .filter((t) => t.id !== theme.id)
   .slice(0, 3);
 
@@ -133,6 +138,9 @@ const breadcrumbs = [
           <section class="detail-section">
             <h2 class="section-heading">Overview</h2>
             <p class="prose-text">{theme.description}</p>
+            <div class="prose-text">
+              <Content />
+            </div>
 
             <div class="highlights-grid">
               {theme.highlights.map((h) => (

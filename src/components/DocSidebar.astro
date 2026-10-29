@@ -1,5 +1,5 @@
 ---
-import { docSections } from '../data/docs';
+import { getDocSections } from '../utils/content';
 import Badge from './Badge.astro';
 import { getRelativePath } from '../data/site';
 
@@ -8,6 +8,7 @@ interface Props {
 }
 
 const { currentSlug = '' } = Astro.props;
+const docSections = await getDocSections();
 ---
 
 <aside class="doc-sidebar" aria-label="Documentation Sidebar">

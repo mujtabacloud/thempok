@@ -3,23 +3,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
-import { blogPosts, type BlogPost } from '../../data/blog';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getAllBlogPosts, type BlogPost } from '../../utils/content';
 import { getRelativePath } from '../../data/site';
 
-export function getStaticPaths() {
-  return blogPosts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
   }));
 }
 
 interface Props {
-  post: BlogPost;
+  entry: CollectionEntry<'blog'>;
 }
 
-const { post } = Astro.props;
+const { entry } = Astro.props;
+const post: BlogPost = { slug: entry.id, ...entry.data };
+const { Content } = await render(entry);
 
-const relatedPosts = blogPosts
+const allPosts = await getAllBlogPosts();
+const relatedPosts = allPosts
   .filter((p) => p.slug !== post.slug)
   .slice(0, 2);
 
@@ -66,7 +71,7 @@ const breadcrumbs = [
 
       <!-- Post Prose Content -->
       <div class="post-body prose">
-        <Fragment set:html={post.contentHtml} />
+        <Content />
       </div>
 
       <!-- Post Tags -->

@@ -2,10 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
-import { docSections, docArticles } from '../../data/docs';
+import { getDocSections } from '../../utils/content';
 import { getRelativePath } from '../../data/site';
 
-const allArticles = Object.values(docArticles);
+const docSections = await getDocSections();
 ---
 
 <BaseLayout
@@ -88,23 +88,21 @@ const allArticles = Object.values(docArticles);
             </div>
 
             <div class="guides-subgrid">
-              {section.items.map((item) => {
-                const article = docArticles[item.slug];
-                return (
-                  <a
-                    href={getRelativePath(`/documentation/${item.slug}/`)}
-                    class="card card-hoverable guide-card"
-                    data-guide-card
-                    data-guide-title={item.title.toLowerCase()}
-                    data-guide-desc={item.description.toLowerCase()}
-                  >
-                    <div class="guide-card-top">
-                      <span class="guide-icon">
-                        <Icon name="file-text" size={18} />
-                      </span>
-                      {item.badge && <Badge variant="brand">{item.badge}</Badge>}
-                      <span class="guide-time">{article?.readTime || '3 min'}</span>
-                    </div>
+              {section.items.map((item) => (
+                <a
+                  href={getRelativePath(`/documentation/${item.slug}/`)}
+                  class="card card-hoverable guide-card"
+                  data-guide-card
+                  data-guide-title={item.title.toLowerCase()}
+                  data-guide-desc={item.description.toLowerCase()}
+                >
+                  <div class="guide-card-top">
+                    <span class="guide-icon">
+                      <Icon name="file-text" size={18} />
+                    </span>
+                    {item.badge && <Badge variant="brand">{item.badge}</Badge>}
+                    <span class="guide-time">{item.readTime || '3 min'}</span>
+                  </div>
 
                     <h3 class="guide-card-title">{item.title}</h3>
                     <p class="guide-card-desc">{item.description}</p>
@@ -116,8 +114,7 @@ const allArticles = Object.values(docArticles);
                       </span>
                     </div>
                   </a>
-                );
-              })}
+              ))}
             </div>
           </div>
         ))}

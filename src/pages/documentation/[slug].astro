@@ -1,31 +1,38 @@
 ---
 import DocLayout from '../../layouts/DocLayout.astro';
-import { docArticles, type DocArticle } from '../../data/docs';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
-export function getStaticPaths() {
-  return Object.values(docArticles).map((article) => ({
-    params: { slug: article.slug },
-    props: { article },
+export async function getStaticPaths() {
+  const docEntries = await getCollection('docs');
+  return docEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
   }));
 }
 
 interface Props {
-  article: DocArticle;
+  entry: CollectionEntry<'docs'>;
 }
 
-const { article } = Astro.props;
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+// Build TOC from markdown headings
+const toc = headings
+  .filter((h) => h.depth === 2 || h.depth === 3)
+  .map((h) => ({ id: h.slug, title: h.text }));
 ---
 
 <DocLayout
-  title={article.title}
-  subtitle={article.subtitle}
-  description={article.summary}
-  currentSlug={article.slug}
-  lastUpdated={article.lastUpdated}
-  readTime={article.readTime}
-  prev={article.prev}
-  next={article.next}
-  toc={article.toc}
+  title={entry.data.title}
+  subtitle={entry.data.subtitle}
+  description={entry.data.summary}
+  currentSlug={entry.id}
+  lastUpdated={entry.data.lastUpdated}
+  readTime={entry.data.readTime}
+  prev={entry.data.prev}
+  next={entry.data.next}
+  toc={toc}
 >
-  <Fragment set:html={article.contentHtml} />
+  <Content />
 </DocLayout>

@@ -3,10 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ThemeCard from '../components/ThemeCard.astro';
 import Badge from '../components/Badge.astro';
 import Icon from '../components/Icon.astro';
-import { themesData } from '../data/themes';
-import { docSections } from '../data/docs';
-import { blogPosts } from '../data/blog';
+import { getAllThemes, getDocSections, getAllBlogPosts } from '../utils/content';
 import { getRelativePath } from '../data/site';
+
+const themesData = await getAllThemes();
+const docSections = await getDocSections();
+const blogPosts = await getAllBlogPosts();
 
 const featuredThemes = themesData.filter((t) => t.featured);
 const latestThemes = themesData.filter((t) => t.latest).slice(0, 3);

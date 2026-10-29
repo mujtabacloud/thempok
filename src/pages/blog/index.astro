@@ -2,9 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
-import { blogPosts, blogCategories } from '../../data/blog';
+import { getAllBlogPosts, blogCategories } from '../../utils/content';
 import { getRelativePath } from '../../data/site';
 
+const blogPosts = await getAllBlogPosts();
 const featuredPost = blogPosts.find((p) => p.featured) || blogPosts[0];
 const regularPosts = blogPosts.filter((p) => p.slug !== featuredPost.slug);
 ---
