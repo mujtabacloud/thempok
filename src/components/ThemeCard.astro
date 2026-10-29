@@ -1,0 +1,242 @@
+---
+import type { Theme } from '../data/themes';
+import ThemePreviewGraphic from './ThemePreviewGraphic.astro';
+import Badge from './Badge.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  theme: Theme;
+}
+
+const { theme } = Astro.props;
+---
+
+<article
+  class="theme-card card card-hoverable"
+  data-theme-card
+  data-title={theme.title.toLowerCase()}
+  data-category={theme.category}
+  data-tags={theme.tags.join(',').toLowerCase()}
+  data-tech={theme.technologies.join(',').toLowerCase()}
+  data-description={theme.description.toLowerCase()}
+>
+  <!-- Preview Wrapper -->
+  <a href={`/themes/${theme.slug}/`} class="theme-card-preview-link" aria-label={`View ${theme.title} details`}>
+    <ThemePreviewGraphic theme={theme} />
+    <span class="preview-overlay">
+      <span class="btn btn-sm btn-primary">View Details &rarr;</span>
+    </span>
+  </a>
+
+  <!-- Content -->
+  <div class="theme-card-body">
+    <div class="theme-card-header">
+      <div class="badges-row">
+        <Badge variant="brand">{theme.category}</Badge>
+        {theme.featured && <Badge variant="warning">Featured</Badge>}
+        {theme.latest && <Badge variant="success">New</Badge>}
+        <span class="free-pill">100% Free</span>
+      </div>
+
+      <div class="stats-row">
+        <span class="stat-item" title={`${theme.stars} stars`}>
+          <Icon name="star" size={13} class="text-amber" />
+          <span>{theme.stars}</span>
+        </span>
+        <span class="stat-item" title={`${theme.downloads} downloads`}>
+          <Icon name="download" size={13} />
+          <span>{theme.downloads}</span>
+        </span>
+      </div>
+    </div>
+
+    <h3 class="theme-card-title">
+      <a href={`/themes/${theme.slug}/`}>{theme.title}</a>
+    </h3>
+
+    <p class="theme-card-desc">{theme.tagline}</p>
+
+    <!-- Tech Stack Tags -->
+    <div class="tech-tags">
+      {theme.technologies.slice(0, 3).map((tech) => (
+        <span class="tech-tag">{tech}</span>
+      ))}
+      {theme.technologies.length > 3 && (
+        <span class="tech-tag muted">+{theme.technologies.length - 3}</span>
+      )}
+    </div>
+
+    <!-- Actions -->
+    <div class="theme-card-actions">
+      <a href={`/themes/${theme.slug}/`} class="btn btn-primary btn-sm btn-flex">
+        <span>Get Theme</span>
+        <Icon name="arrow-right" size={14} />
+      </a>
+      <a
+        href={theme.demoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-secondary btn-sm"
+        title="Open Live Demo (sample preview)"
+      >
+        <Icon name="external-link" size={14} />
+        <span>Demo</span>
+      </a>
+      <a
+        href={theme.githubUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-ghost btn-sm btn-icon"
+        title="View GitHub Repository"
+        aria-label={`GitHub repository for ${theme.title}`}
+      >
+        <Icon name="github" size={16} />
+      </a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .theme-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    background-color: var(--bg-surface);
+  }
+
+  .theme-card-preview-link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: #020617;
+  }
+
+  .preview-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+  }
+
+  .theme-card-preview-link:hover .preview-overlay {
+    opacity: 1;
+  }
+
+  .theme-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.75rem;
+  }
+
+  .theme-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .badges-row {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .free-pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-success);
+    background: var(--color-success-bg);
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .stats-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .text-amber {
+    color: #f59e0b;
+  }
+
+  .theme-card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+  }
+
+  .theme-card-title a:hover {
+    color: var(--brand-primary);
+  }
+
+  .theme-card-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.6em;
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tech-tag {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    padding: 2px 7px;
+    border-radius: var(--radius-xs);
+    background: var(--bg-surface-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .tech-tag.muted {
+    color: var(--text-muted);
+  }
+
+  .theme-card-actions {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .btn-flex {
+    flex: 1;
+  }
+
+  .btn-icon {
+    padding: 0.4rem 0.6rem;
+  }
+</style>

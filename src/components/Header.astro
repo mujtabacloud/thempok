@@ -1,0 +1,438 @@
+---
+import { siteConfig } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = Astro.url.pathname } = Astro.props;
+
+const isActive = (href: string) => {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+};
+---
+
+<header class="site-header" id="site-header">
+  <div class="container header-container">
+    <!-- Brand Logo -->
+    <a href="/" class="brand-link" aria-label="Thempok Homepage">
+      <div class="brand-symbol">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="url(#tp-grad)" />
+          <path d="M9 10H23V13H17.5V23H14.5V13H9V10Z" fill="white" />
+          <circle cx="23" cy="9" r="3" fill="#38bdf8" />
+          <defs>
+            <linearGradient id="tp-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#4F46E5" />
+              <stop offset="0.5" stop-color="#7C3AED" />
+              <stop offset="1" stop-color="#06B6D4" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="brand-name">Thempok</span>
+      <span class="brand-badge">Free</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <ul class="nav-list">
+        {siteConfig.navItems.map((item) => (
+          <li class="nav-item">
+            <a
+              href={item.href}
+              class={`nav-link ${isActive(item.href) ? 'active' : ''}`}
+            >
+              {item.title}
+              {item.badge && <span class="nav-pill">{item.badge}</span>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <!-- Dark/Light Theme Switcher -->
+      <button
+        id="theme-toggle-btn"
+        class="theme-toggle"
+        type="button"
+        aria-label="Toggle light and dark color scheme"
+        title="Toggle color scheme"
+      >
+        <span class="theme-icon light-icon">
+          <Icon name="sun" size={19} />
+        </span>
+        <span class="theme-icon dark-icon">
+          <Icon name="moon" size={19} />
+        </span>
+      </button>
+
+      <!-- GitHub Link -->
+      <a
+        href={siteConfig.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-secondary btn-sm hide-mobile"
+        aria-label="Thempok GitHub repository"
+      >
+        <Icon name="github" size={17} />
+        <span>GitHub</span>
+      </a>
+
+      <!-- Mobile Menu Toggle Button -->
+      <button
+        id="mobile-menu-toggle"
+        class="mobile-toggle hide-desktop"
+        type="button"
+        aria-label="Toggle mobile menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu-drawer"
+      >
+        <span class="icon-open">
+          <Icon name="menu" size={22} />
+        </span>
+        <span class="icon-close">
+          <Icon name="close" size={22} />
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Drawer -->
+  <div id="mobile-menu-drawer" class="mobile-drawer" hidden>
+    <div class="mobile-drawer-inner">
+      <nav class="mobile-nav" aria-label="Mobile Navigation">
+        <ul class="mobile-nav-list">
+          {siteConfig.navItems.map((item) => (
+            <li class="mobile-nav-item">
+              <a
+                href={item.href}
+                class={`mobile-nav-link ${isActive(item.href) ? 'active' : ''}`}
+              >
+                <span>{item.title}</span>
+                {item.badge && <span class="nav-pill">{item.badge}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="mobile-drawer-footer">
+        <a
+          href={siteConfig.github}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-secondary btn-full"
+        >
+          <Icon name="github" size={18} />
+          <span>View on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  // Mobile drawer logic
+  (function () {
+    const toggleBtn = document.getElementById('mobile-menu-toggle');
+    const drawer = document.getElementById('mobile-menu-drawer');
+
+    if (toggleBtn && drawer) {
+      toggleBtn.addEventListener('click', () => {
+        const isExpanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+        if (isExpanded) {
+          drawer.classList.remove('open');
+          setTimeout(() => {
+            drawer.hidden = true;
+          }, 200);
+        } else {
+          drawer.hidden = false;
+          // small delay to trigger CSS transition
+          requestAnimationFrame(() => {
+            drawer.classList.add('open');
+          });
+        }
+      });
+
+      // Close on link click
+      drawer.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          toggleBtn.setAttribute('aria-expanded', 'false');
+          drawer.classList.remove('open');
+          setTimeout(() => {
+            drawer.hidden = true;
+          }, 200);
+        });
+      });
+    }
+
+    // Theme toggle logic
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('thempok-theme', newTheme);
+      });
+    }
+  })();
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+    background-color: var(--header-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--header-border);
+    display: flex;
+    align-items: center;
+    transition: background-color var(--transition-normal), border-color var(--transition-normal);
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 100%;
+  }
+
+  /* Brand Link */
+  .brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    border-radius: var(--radius-sm);
+  }
+
+  .brand-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-fast);
+  }
+
+  .brand-link:hover .brand-symbol {
+    transform: rotate(-6deg) scale(1.05);
+  }
+
+  .brand-name {
+    letter-spacing: -0.03em;
+  }
+
+  .brand-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    background: var(--brand-badge-bg);
+    color: var(--brand-badge-color);
+    border: 1px solid var(--brand-badge-border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Desktop Nav */
+  .desktop-nav {
+    display: none;
+  }
+
+  @media (min-width: 769px) {
+    .desktop-nav {
+      display: block;
+    }
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    list-style: none;
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: var(--nav-link-color);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+  }
+
+  .nav-link:hover {
+    color: var(--nav-link-hover-color);
+    background-color: var(--nav-link-hover-bg);
+  }
+
+  .nav-link.active {
+    color: var(--nav-link-active-color);
+    background-color: var(--nav-link-active-bg);
+    border-color: var(--nav-link-active-border);
+    font-weight: 600;
+  }
+
+  .nav-pill {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    background: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+
+  /* Actions */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .theme-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--nav-link-color);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-surface);
+    transition: all var(--transition-fast);
+  }
+
+  .theme-toggle:hover {
+    color: var(--nav-link-hover-color);
+    border-color: var(--border-hover);
+    background: var(--bg-surface-elevated);
+  }
+
+  .theme-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-toggle {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-surface);
+    transition: all var(--transition-fast);
+  }
+
+  .mobile-toggle:hover {
+    border-color: var(--border-hover);
+    background: var(--bg-surface-elevated);
+  }
+
+  .mobile-toggle[aria-expanded="false"] .icon-close {
+    display: none;
+  }
+  .mobile-toggle[aria-expanded="true"] .icon-open {
+    display: none;
+  }
+
+  .nav-link:focus-visible,
+  .theme-toggle:focus-visible,
+  .mobile-toggle:focus-visible,
+  .brand-link:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+  }
+
+  /* Mobile Drawer */
+  .mobile-drawer {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(9, 13, 22, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease, visibility 200ms ease;
+  }
+
+  .mobile-drawer.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-drawer-inner {
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border-strong);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-8px);
+    transition: transform 200ms ease;
+  }
+
+  .mobile-drawer.open .mobile-drawer-inner {
+    transform: translateY(0);
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--nav-link-color);
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+  }
+
+  .mobile-nav-link:hover {
+    background: var(--nav-link-hover-bg);
+    color: var(--nav-link-hover-color);
+  }
+
+  .mobile-nav-link.active {
+    background: var(--nav-link-active-bg);
+    color: var(--nav-link-active-color);
+    border-color: var(--nav-link-active-border);
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+</style>

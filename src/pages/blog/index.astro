@@ -1,0 +1,393 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+import Icon from '../../components/Icon.astro';
+import { blogPosts, blogCategories } from '../../data/blog';
+
+const featuredPost = blogPosts.find((p) => p.featured) || blogPosts[0];
+const regularPosts = blogPosts.filter((p) => p.slug !== featuredPost.slug);
+---
+
+<BaseLayout
+  title="Engineering Blog — Architecture, CSS & Performance"
+  description="In-depth technical articles, tutorials, and performance guides from the creators of Thempok themes."
+>
+  <div class="blog-landing-header">
+    <div class="container header-inner">
+      <div class="page-badge-wrap">
+        <Badge variant="brand">Thempok Journal</Badge>
+      </div>
+      <h1 class="page-title">Engineering & Design Blog</h1>
+      <p class="page-subtitle">
+        Deep dives into static site performance, zero-runtime CSS, modern Astro patterns, and developer experience.
+      </p>
+
+      <!-- Category Tabs -->
+      <div class="category-tabs-wrap">
+        {blogCategories.map((category) => (
+          <button
+            type="button"
+            class={`blog-tab ${category === 'All' ? 'active' : ''}`}
+            data-blog-category={category}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <section class="blog-content-section">
+    <div class="container">
+      <!-- Featured Post Banner -->
+      <div class="featured-post-wrapper" id="featured-banner" data-category={featuredPost.category}>
+        <article class="card card-hoverable featured-card">
+          <div class="featured-card-badge">
+            <Badge variant="warning">Featured Story</Badge>
+            <span class="featured-read-time">{featuredPost.readTime}</span>
+          </div>
+
+          <h2 class="featured-title">
+            <a href={`/blog/${featuredPost.slug}/`}>{featuredPost.title}</a>
+          </h2>
+
+          <p class="featured-excerpt">{featuredPost.excerpt}</p>
+
+          <div class="featured-footer">
+            <div class="author-block">
+              <span class="author-avatar">{featuredPost.author.avatarText}</span>
+              <div>
+                <span class="author-name">{featuredPost.author.name}</span>
+                <span class="author-role">{featuredPost.author.role} • {featuredPost.publishDate}</span>
+              </div>
+            </div>
+
+            <a href={`/blog/${featuredPost.slug}/`} class="btn btn-primary">
+              <span>Read Full Story</span>
+              <Icon name="arrow-right" size={15} />
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="blog-articles-grid" id="blog-grid">
+        {blogPosts.map((post) => (
+          <article
+            class="card card-hoverable blog-card"
+            data-blog-card
+            data-category={post.category}
+          >
+            <div class="blog-card-top">
+              <Badge variant="brand">{post.category}</Badge>
+              <span class="blog-date">{post.publishDate}</span>
+            </div>
+
+            <h3 class="blog-card-title">
+              <a href={`/blog/${post.slug}/`}>{post.title}</a>
+            </h3>
+
+            <p class="blog-card-excerpt">{post.excerpt}</p>
+
+            <div class="blog-card-tags">
+              {post.tags.map((t) => (
+                <span class="tag-pill">#{t}</span>
+              ))}
+            </div>
+
+            <div class="blog-card-bottom">
+              <div class="author-mini">
+                <span class="author-avatar-sm">{post.author.avatarText}</span>
+                <span class="author-name-sm">{post.author.name}</span>
+              </div>
+              <span class="read-estimate">{post.readTime}</span>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const tabs = document.querySelectorAll('[data-blog-category]');
+    const cards = document.querySelectorAll('[data-blog-card]');
+    const featuredBanner = document.getElementById('featured-banner');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const selectedCategory = tab.getAttribute('data-blog-category');
+
+        cards.forEach((card) => {
+          const cardCategory = card.getAttribute('data-category');
+          if (selectedCategory === 'All' || cardCategory === selectedCategory) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        // Hide featured banner if category doesn't match
+        if (featuredBanner) {
+          const featCat = featuredBanner.getAttribute('data-category');
+          if (selectedCategory === 'All' || featCat === selectedCategory) {
+            featuredBanner.style.display = '';
+          } else {
+            featuredBanner.style.display = 'none';
+          }
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  .blog-landing-header {
+    background: var(--hero-glow);
+    padding: 3.5rem 0 2.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .header-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .page-badge-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    max-width: 660px;
+    margin-bottom: 2rem;
+  }
+
+  .category-tabs-wrap {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .blog-tab {
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .blog-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-surface-elevated);
+  }
+
+  .blog-tab.active {
+    background: var(--brand-primary);
+    color: #ffffff;
+    border-color: var(--brand-primary);
+  }
+
+  .blog-content-section {
+    padding: 3rem 0 5rem;
+  }
+
+  /* Featured Post */
+  .featured-post-wrapper {
+    margin-bottom: 3.5rem;
+  }
+
+  .featured-card {
+    padding: 2.5rem;
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 100%);
+    border: 1px solid var(--border-strong);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .featured-card-badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .featured-read-time {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .featured-title {
+    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0;
+  }
+
+  .featured-title a:hover {
+    color: var(--brand-primary);
+  }
+
+  .featured-excerpt {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 900px;
+  }
+
+  .featured-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .author-block {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .author-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .author-name {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+  }
+
+  .author-role {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* Grid */
+  .blog-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    gap: 0.85rem;
+  }
+
+  .blog-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .blog-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .blog-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .blog-card:hover .blog-card-title a {
+    color: var(--brand-primary);
+  }
+
+  .blog-card-excerpt {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+    flex: 1;
+  }
+
+  .blog-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tag-pill {
+    font-size: 0.75rem;
+    color: var(--brand-primary);
+    background: var(--brand-primary-light);
+    padding: 1px 6px;
+    border-radius: var(--radius-xs);
+    font-family: var(--font-mono);
+  }
+
+  .blog-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .author-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .author-avatar-sm {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+  }
+
+  .author-name-sm {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .read-estimate {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>

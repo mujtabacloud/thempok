@@ -1,0 +1,271 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DocSidebar from '../components/DocSidebar.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  currentSlug: string;
+  subtitle?: string;
+  lastUpdated?: string;
+  readTime?: string;
+  prev?: { title: string; slug: string };
+  next?: { title: string; slug: string };
+  toc?: { id: string; title: string }[];
+}
+
+const {
+  title,
+  description,
+  currentSlug,
+  subtitle,
+  lastUpdated,
+  readTime,
+  prev,
+  next,
+  toc = [],
+} = Astro.props;
+
+const breadcrumbs = [
+  { label: 'Documentation', href: '/documentation/' },
+  { label: title },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="container doc-container">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <div class="doc-layout-grid">
+      <!-- Sidebar Navigation -->
+      <div class="doc-sidebar-col">
+        <DocSidebar currentSlug={currentSlug} />
+      </div>
+
+      <!-- Main Documentation Article -->
+      <article class="doc-article-col">
+        <header class="doc-article-header">
+          <h1 class="doc-article-title">{title}</h1>
+          {subtitle && <p class="doc-article-subtitle">{subtitle}</p>}
+
+          <div class="doc-meta-row">
+            {readTime && (
+              <span class="meta-tag">
+                <Icon name="book" size={14} />
+                <span>{readTime}</span>
+              </span>
+            )}
+            {lastUpdated && (
+              <span class="meta-tag">
+                <Icon name="zap" size={14} />
+                <span>Updated: {lastUpdated}</span>
+              </span>
+            )}
+          </div>
+        </header>
+
+        {toc.length > 0 && (
+          <nav class="on-this-page-box" aria-label="Table of contents">
+            <span class="on-this-page-title">On this page</span>
+            <ul class="toc-list">
+              {toc.map((heading) => (
+                <li>
+                  <a href={`#${heading.id}`} class="toc-link">
+                    {heading.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
+        <div class="doc-body prose">
+          <slot />
+        </div>
+
+        <!-- Next / Prev pagination -->
+        <nav class="doc-pagination-nav" aria-label="Documentation navigation">
+          {prev ? (
+            <a href={`/documentation/${prev.slug}/`} class="pagination-btn prev">
+              <span class="pagination-sub">
+                <Icon name="arrow-left" size={13} />
+                <span>Previous</span>
+              </span>
+              <span class="pagination-title">{prev.title}</span>
+            </a>
+          ) : (
+            <div />
+          )}
+
+          {next && (
+            <a href={`/documentation/${next.slug}/`} class="pagination-btn next">
+              <span class="pagination-sub">
+                <span>Next</span>
+                <Icon name="arrow-right" size={13} />
+              </span>
+              <span class="pagination-title">{next.title}</span>
+            </a>
+          )}
+        </nav>
+      </article>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .doc-container {
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+  }
+
+  .doc-layout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .doc-layout-grid {
+      grid-template-columns: 280px 1fr;
+      gap: 3.5rem;
+    }
+  }
+
+  .doc-sidebar-col {
+    position: relative;
+  }
+
+  @media (min-width: 900px) {
+    .doc-sidebar-col {
+      position: sticky;
+      top: calc(var(--header-height) + 1.5rem);
+      height: fit-content;
+      max-height: calc(100vh - var(--header-height) - 3rem);
+      overflow-y: auto;
+    }
+  }
+
+  .doc-article-col {
+    min-width: 0;
+  }
+
+  .doc-article-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .doc-article-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+
+  .doc-article-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin-bottom: 1rem;
+  }
+
+  .doc-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .on-this-page-box {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .on-this-page-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .toc-link {
+    font-size: 0.9rem;
+    color: var(--brand-primary);
+  }
+
+  .toc-link:hover {
+    text-decoration: underline;
+  }
+
+  .doc-body {
+    margin-bottom: 3.5rem;
+  }
+
+  .doc-pagination-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .pagination-btn {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+  }
+
+  .pagination-btn:hover {
+    border-color: var(--brand-primary);
+    background: var(--bg-surface-elevated);
+    transform: translateY(-2px);
+  }
+
+  .pagination-btn.next {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .pagination-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.35rem;
+  }
+
+  .pagination-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+</style>

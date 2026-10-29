@@ -1,16 +1,694 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ThemeCard from '../components/ThemeCard.astro';
+import Badge from '../components/Badge.astro';
+import Icon from '../components/Icon.astro';
+import { themesData } from '../data/themes';
+import { docSections } from '../data/docs';
+import { blogPosts } from '../data/blog';
+
+const featuredThemes = themesData.filter((t) => t.featured);
+const latestThemes = themesData.filter((t) => t.latest).slice(0, 3);
+const latestPosts = blogPosts.slice(0, 2);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Thempok — Free Website Themes, Documentation & Tech Blogs"
+  description="High-performance, 100% free open-source website themes for developers. Built with Astro, clean CSS, and zero framework bloat."
+>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-container">
+      <div class="hero-badge-wrap">
+        <span class="hero-pill">
+          <Icon name="sparkles" size={14} />
+          <span>Thempok 1.0 Release</span>
+          <span class="pill-dot"></span>
+          <span class="pill-highlight">100% Free & Open Source</span>
+        </span>
+      </div>
+
+      <h1 class="hero-title">
+        Free Website Themes for <span class="text-gradient">Developers & Creators</span>
+      </h1>
+
+      <p class="hero-description">
+        Stop wrestling with bloated templates and hidden paywalls. Thempok provides production-ready, beautifully designed Astro themes, rock-solid documentation, and engineering blogs — completely free under the MIT license.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="/themes/" class="btn btn-primary btn-lg">
+          <span>Explore Themes</span>
+          <Icon name="arrow-right" size={16} />
+        </a>
+        <a href="/documentation/getting-started/" class="btn btn-secondary btn-lg">
+          <Icon name="book" size={17} />
+          <span>Read Documentation</span>
+        </a>
+        <a
+          href="https://github.com/thempok/thempok"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline btn-lg hide-mobile"
+        >
+          <Icon name="github" size={18} />
+          <span>Star on GitHub</span>
+        </a>
+      </div>
+
+      <!-- Quick Metrics Bar -->
+      <div class="hero-metrics">
+        <div class="metric-item">
+          <span class="metric-number">9+</span>
+          <span class="metric-label">Curated Themes</span>
+        </div>
+        <div class="metric-separator"></div>
+        <div class="metric-item">
+          <span class="metric-number">100%</span>
+          <span class="metric-label">Free & MIT Licensed</span>
+        </div>
+        <div class="metric-separator"></div>
+        <div class="metric-item">
+          <span class="metric-number">0</span>
+          <span class="metric-label">Tracking or Bloat</span>
+        </div>
+        <div class="metric-separator"></div>
+        <div class="metric-item">
+          <span class="metric-number">98+</span>
+          <span class="metric-label">Avg Lighthouse Score</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Pillars -->
+  <section class="pillars-section">
+    <div class="container">
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <Icon name="zap" size={24} />
+          </div>
+          <h3 class="pillar-title">Zero-JS Performance</h3>
+          <p class="pillar-desc">
+            Shipped with Astro's Islands architecture. HTML and CSS are compiled ahead of time with near-zero runtime overhead.
+          </p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <Icon name="shield" size={24} />
+          </div>
+          <h3 class="pillar-title">Truly Free & Open Source</h3>
+          <p class="pillar-desc">
+            Every theme is licensed under MIT. Use them for commercial clients, personal portfolios, or startup products with zero royalties.
+          </p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon-box">
+            <Icon name="sun" size={24} />
+          </div>
+          <h3 class="pillar-title">Flicker-Free Dark Mode</h3>
+          <p class="pillar-desc">
+            Engineered with CSS custom properties and instant head execution so your users never experience blinding white flashes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Themes Section -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">
+            <Badge variant="brand">Curated Highlights</Badge>
+          </div>
+          <h2 class="section-title">Featured Themes</h2>
+          <p class="section-subtitle">
+            Hand-picked templates designed for speed, typography, and effortless customization.
+          </p>
+        </div>
+        <a href="/themes/" class="btn btn-secondary hide-mobile">
+          <span>View All Themes ({themesData.length})</span>
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </div>
+
+      <div class="themes-grid">
+        {featuredThemes.map((theme) => (
+          <ThemeCard theme={theme} />
+        ))}
+      </div>
+
+      <div class="mobile-section-cta hide-desktop">
+        <a href="/themes/" class="btn btn-secondary btn-full">
+          <span>View All Themes ({themesData.length})</span>
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Additions Section -->
+  <section class="section-padding section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">
+            <Badge variant="success">Fresh Drops</Badge>
+          </div>
+          <h2 class="section-title">Latest Themes</h2>
+          <p class="section-subtitle">
+            Recently added themes covering SaaS landing pages, digital storefronts, and portfolios.
+          </p>
+        </div>
+        <a href="/themes/?filter=latest" class="btn btn-outline hide-mobile">
+          <span>Browse All</span>
+          <Icon name="arrow-right" size={14} />
+        </a>
+      </div>
+
+      <div class="themes-grid">
+        {latestThemes.map((theme) => (
+          <ThemeCard theme={theme} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Documentation Highlights Section -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">
+            <Badge variant="brand">Documentation</Badge>
+          </div>
+          <h2 class="section-title">Everything You Need to Build</h2>
+          <p class="section-subtitle">
+            Clear, step-by-step guides covering installation, styling systems, and GitHub Pages deployment.
+          </p>
+        </div>
+        <a href="/documentation/" class="btn btn-secondary hide-mobile">
+          <span>Visit Documentation Hub</span>
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </div>
+
+      <div class="docs-showcase-grid">
+        {docSections.map((sec) => (
+          <div class="card doc-summary-card">
+            <div class="doc-summary-icon">
+              <Icon name="book" size={20} />
+            </div>
+            <h3 class="doc-sec-title">{sec.title}</h3>
+            <ul class="doc-sec-links">
+              {sec.items.map((item) => (
+                <li>
+                  <a href={`/documentation/${item.slug}/`} class="doc-sec-link">
+                    <span class="link-bullet">&rarr;</span>
+                    <span class="link-text">{item.title}</span>
+                    {item.badge && <span class="badge badge-neutral mini">{item.badge}</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog Highlights Section -->
+  <section class="section-padding section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="section-tag">
+            <Badge variant="brand">Engineering Blog</Badge>
+          </div>
+          <h2 class="section-title">Latest From the Blog</h2>
+          <p class="section-subtitle">
+            Deep-dives into modern web architecture, CSS techniques, and static site workflows.
+          </p>
+        </div>
+        <a href="/blog/" class="btn btn-secondary hide-mobile">
+          <span>Read All Articles</span>
+          <Icon name="arrow-right" size={15} />
+        </a>
+      </div>
+
+      <div class="blog-preview-grid">
+        {latestPosts.map((post) => (
+          <article class="card card-hoverable blog-summary-card">
+            <div class="blog-meta-top">
+              <Badge variant="brand">{post.category}</Badge>
+              <span class="read-time">{post.readTime}</span>
+            </div>
+
+            <h3 class="blog-card-title">
+              <a href={`/blog/${post.slug}/`}>{post.title}</a>
+            </h3>
+
+            <p class="blog-card-excerpt">{post.excerpt}</p>
+
+            <div class="blog-card-bottom">
+              <div class="author-info">
+                <span class="author-avatar">{post.author.avatarText}</span>
+                <span class="author-name">{post.author.name}</span>
+              </div>
+              <a href={`/blog/${post.slug}/`} class="btn btn-ghost btn-sm">
+                <span>Read Article</span>
+                <Icon name="arrow-right" size={14} />
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner-section">
+    <div class="container">
+      <div class="cta-banner-box">
+        <div class="cta-content">
+          <h2 class="cta-title">Ready to launch your next project?</h2>
+          <p class="cta-desc">
+            Explore our catalog of free Astro themes or read our quickstart documentation to get started in minutes.
+          </p>
+        </div>
+        <div class="cta-actions">
+          <a href="/themes/" class="btn btn-primary btn-lg">Browse Themes</a>
+          <a href="/about/" class="btn btn-secondary btn-lg">Learn About Thempok</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero-section {
+    padding: 5rem 0 3.5rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--hero-glow);
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-badge-wrap {
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.95rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .pill-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--border-strong);
+  }
+
+  .pill-highlight {
+    color: var(--brand-primary);
+  }
+
+  .hero-title {
+    max-width: 900px;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-description {
+    max-width: 700px;
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin-bottom: 2.25rem;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 3.5rem;
+  }
+
+  /* Metrics */
+  .hero-metrics {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1.5rem 2.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
+  }
+
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .metric-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .metric-separator {
+    width: 1px;
+    height: 36px;
+    background: var(--border-subtle);
+  }
+
+  @media (max-width: 640px) {
+    .metric-separator {
+      display: none;
+    }
+    .hero-metrics {
+      gap: 1.5rem;
+      padding: 1.25rem 1.5rem;
+    }
+  }
+
+  /* Pillars */
+  .pillars-section {
+    padding: 2.5rem 0 4rem;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+  }
+
+  .pillar-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .pillar-card:hover {
+    border-color: var(--brand-primary);
+    transform: translateY(-2px);
+  }
+
+  .pillar-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    background: var(--brand-primary-light);
+    color: var(--brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pillar-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .pillar-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Sections general */
+  .section-padding {
+    padding: 4.5rem 0;
+  }
+
+  .section-alt {
+    background-color: var(--bg-surface-elevated);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+  }
+
+  .section-tag {
+    margin-bottom: 0.65rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0;
+  }
+
+  .themes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    .themes-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .mobile-section-cta {
+    margin-top: 2rem;
+  }
+
+  /* Docs summary grid */
+  .docs-showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.75rem;
+  }
+
+  .doc-summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.75rem;
+  }
+
+  .doc-summary-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--brand-primary-light);
+    color: var(--brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .doc-sec-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .doc-sec-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .doc-sec-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+
+  .doc-sec-link:hover {
+    color: var(--brand-primary);
+  }
+
+  .link-bullet {
+    color: var(--brand-primary);
+    font-weight: bold;
+  }
+
+  .mini {
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    margin-left: auto;
+  }
+
+  /* Blog Preview Grid */
+  .blog-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  .blog-summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.75rem;
+  }
+
+  .blog-meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .read-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .blog-card-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .blog-card-title a:hover {
+    color: var(--brand-primary);
+  }
+
+  .blog-card-excerpt {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+    flex: 1;
+  }
+
+  .blog-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .author-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .author-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .author-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  /* CTA Banner */
+  .cta-banner-section {
+    padding: 5rem 0 2rem;
+  }
+
+  .cta-banner-box {
+    background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    padding: 3.5rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.75rem;
+    color: #ffffff;
+    box-shadow: var(--shadow-xl);
+  }
+
+  @media (min-width: 800px) {
+    .cta-banner-box {
+      flex-direction: row;
+      text-align: left;
+      justify-content: space-between;
+      padding: 4rem 3.5rem;
+    }
+  }
+
+  .cta-title {
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-desc {
+    font-size: 1.1rem;
+    color: #cbd5e1;
+    max-width: 540px;
+    margin: 0;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+</style>

@@ -1,0 +1,173 @@
+---
+import { docSections } from '../data/docs';
+import Badge from './Badge.astro';
+
+interface Props {
+  currentSlug?: string;
+}
+
+const { currentSlug = '' } = Astro.props;
+---
+
+<aside class="doc-sidebar" aria-label="Documentation Sidebar">
+  <div class="sidebar-header">
+    <span class="sidebar-title">Documentation</span>
+    <span class="badge badge-brand">v1.0</span>
+  </div>
+
+  <div class="sidebar-nav-groups">
+    {docSections.map((section) => (
+      <div class="nav-group">
+        <h3 class="group-title">{section.title}</h3>
+        <ul class="group-list">
+          {section.items.map((item) => {
+            const isActive = item.slug === currentSlug;
+            return (
+              <li>
+                <a
+                  href={`/documentation/${item.slug}/`}
+                  class={`group-link ${isActive ? 'active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <span class="link-label">{item.title}</span>
+                  {item.badge && (
+                    <span class="mini-pill">{item.badge}</span>
+                  )}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="contribute-box">
+      <span class="contribute-title">Missing a guide?</span>
+      <p class="contribute-text">Contribute or request documentation topics on GitHub.</p>
+      <a
+        href="https://github.com/thempok/thempok/issues"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-outline btn-sm"
+      >
+        Open an Issue
+      </a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .doc-sidebar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .sidebar-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .sidebar-nav-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .group-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .group-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .group-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    transition: all var(--transition-fast);
+  }
+
+  .group-link:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-surface-elevated);
+  }
+
+  .group-link.active {
+    color: var(--brand-primary);
+    background-color: var(--brand-primary-light);
+    font-weight: 600;
+  }
+
+  .mini-pill {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    background: var(--bg-surface-elevated);
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .group-link.active .mini-pill {
+    background: var(--brand-primary);
+    color: #ffffff;
+    border-color: var(--brand-primary);
+  }
+
+  .sidebar-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .contribute-box {
+    background: var(--bg-surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contribute-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .contribute-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+</style>

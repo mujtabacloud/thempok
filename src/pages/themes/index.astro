@@ -1,0 +1,517 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ThemeCard from '../../components/ThemeCard.astro';
+import Icon from '../../components/Icon.astro';
+import Badge from '../../components/Badge.astro';
+import { themesData, themeCategories } from '../../data/themes';
+
+const totalThemes = themesData.length;
+---
+
+<BaseLayout
+  title="Themes Catalog — Free & Open Source Themes"
+  description="Browse our curated collection of free, high-performance website themes built with Astro. Filter by category, search by stack, and inspect live previews."
+>
+  <div class="themes-page-header">
+    <div class="container header-inner">
+      <div class="page-badge-wrap">
+        <Badge variant="brand">100% Free Themes</Badge>
+      </div>
+      <h1 class="page-title">Explore Themes</h1>
+      <p class="page-subtitle">
+        Discover open-source templates for portfolios, technical documentation, blogs, and SaaS landing pages. Zero cost, MIT licensed.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="search-filter-wrap">
+        <div class="search-bar-box">
+          <span class="search-icon">
+            <Icon name="search" size={20} />
+          </span>
+          <input
+            id="theme-search-input"
+            type="search"
+            class="theme-search-input"
+            placeholder="Search themes by name, stack (e.g. Astro, TypeScript, Markdown), or keywords..."
+            aria-label="Search themes by name or tech stack"
+            autocomplete="off"
+          />
+          <button
+            id="clear-search-btn"
+            type="button"
+            class="clear-search-btn"
+            aria-label="Clear search input"
+            hidden
+          >
+            <Icon name="close" size={16} />
+          </button>
+        </div>
+
+        <!-- Horizontal Scrollable Category Filter Pills -->
+        <div class="category-scroll-container" role="region" aria-label="Category Filters">
+          <div class="category-pill-track" id="category-track" role="tablist">
+            {themeCategories.map((category) => (
+              <button
+                type="button"
+                role="tab"
+                class={`category-tab ${category === 'All' ? 'active' : ''}`}
+                data-category={category}
+                aria-selected={category === 'All' ? 'true' : 'false'}
+              >
+                <span>{category}</span>
+                <span class="tab-count">
+                  {category === 'All'
+                    ? totalThemes
+                    : themesData.filter((t) => t.category === category).length}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <section class="themes-catalog-section">
+    <div class="container">
+      <!-- Live Count & Active Indicator Bar -->
+      <div class="filter-status-bar">
+        <span class="results-count" id="results-count">
+          Showing <strong>{totalThemes}</strong> of {totalThemes} themes
+        </span>
+        <button id="reset-all-filters" class="reset-link" style="display: none;">
+          Clear search & filters
+        </button>
+      </div>
+
+      <!-- Themes Grid -->
+      <div class="themes-grid" id="themes-grid">
+        {themesData.map((theme) => (
+          <ThemeCard theme={theme} />
+        ))}
+      </div>
+
+      <!-- Empty State -->
+      <div id="no-results-state" class="empty-state card" hidden>
+        <div class="empty-icon">
+          <Icon name="search" size={36} />
+        </div>
+        <h3 class="empty-title">No matching themes found</h3>
+        <p class="empty-desc">
+          We couldn't find any themes matching your search query or selected category. Try searching for different keywords or clear your filters.
+        </p>
+        <button id="empty-reset-btn" type="button" class="btn btn-primary">
+          Reset Filters
+        </button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const searchInput = document.getElementById('theme-search-input');
+    const clearBtn = document.getElementById('clear-search-btn');
+    const categoryTabs = document.querySelectorAll('[data-category]');
+    const themeCards = document.querySelectorAll('[data-theme-card]');
+    const resultsCount = document.getElementById('results-count');
+    const resetLink = document.getElementById('reset-all-filters');
+    const emptyState = document.getElementById('no-results-state');
+    const emptyResetBtn = document.getElementById('empty-reset-btn');
+
+    let currentCategory = 'All';
+    let searchQuery = '';
+    const totalCount = themeCards.length;
+
+    // Check URL parameters on load
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialCategory = urlParams.get('category');
+    const initialSearch = urlParams.get('q');
+
+    if (initialCategory) {
+      const targetTab = Array.from(categoryTabs).find(
+        (tab) => tab.getAttribute('data-category').toLowerCase() === initialCategory.toLowerCase()
+      );
+      if (targetTab) {
+        currentCategory = targetTab.getAttribute('data-category');
+        updateActiveTabUI(targetTab);
+      }
+    }
+
+    if (initialSearch) {
+      searchQuery = initialSearch.toLowerCase().trim();
+      if (searchInput) {
+        searchInput.value = initialSearch;
+        if (clearBtn) clearBtn.hidden = false;
+      }
+    }
+
+    function updateActiveTabUI(activeTab) {
+      categoryTabs.forEach((tab) => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+      });
+      activeTab.classList.add('active');
+      activeTab.setAttribute('aria-selected', 'true');
+    }
+
+    function filterThemes() {
+      let visibleCount = 0;
+
+      themeCards.forEach((card) => {
+        const title = card.getAttribute('data-title') || '';
+        const category = card.getAttribute('data-category') || '';
+        const tags = card.getAttribute('data-tags') || '';
+        const tech = card.getAttribute('data-tech') || '';
+        const desc = card.getAttribute('data-description') || '';
+
+        const matchesCategory =
+          currentCategory === 'All' || category.toLowerCase() === currentCategory.toLowerCase();
+
+        const fullSearchText = `${title} ${category} ${tags} ${tech} ${desc}`.toLowerCase();
+        const matchesSearch = !searchQuery || fullSearchText.includes(searchQuery);
+
+        if (matchesCategory && matchesSearch) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update Results Counter
+      if (resultsCount) {
+        resultsCount.innerHTML = `Showing <strong>${visibleCount}</strong> of ${totalCount} themes`;
+      }
+
+      // Empty state handling
+      if (emptyState) {
+        emptyState.hidden = visibleCount > 0;
+      }
+
+      // Show/hide reset link
+      const isFiltered = currentCategory !== 'All' || searchQuery !== '';
+      if (resetLink) {
+        resetLink.style.display = isFiltered ? 'inline-block' : 'none';
+      }
+    }
+
+    // Category click handler
+    categoryTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        currentCategory = tab.getAttribute('data-category') || 'All';
+        updateActiveTabUI(tab);
+        filterThemes();
+
+        // Update URL quietly
+        const url = new URL(window.location);
+        if (currentCategory !== 'All') {
+          url.searchParams.set('category', currentCategory);
+        } else {
+          url.searchParams.delete('category');
+        }
+        window.history.replaceState({}, '', url);
+      });
+    });
+
+    // Search input handler
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        if (clearBtn) {
+          clearBtn.hidden = searchQuery.length === 0;
+        }
+        filterThemes();
+
+        const url = new URL(window.location);
+        if (searchQuery) {
+          url.searchParams.set('q', searchQuery);
+        } else {
+          url.searchParams.delete('q');
+        }
+        window.history.replaceState({}, '', url);
+      });
+    }
+
+    // Clear search button
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchQuery = '';
+        clearBtn.hidden = true;
+        searchInput.focus();
+        filterThemes();
+
+        const url = new URL(window.location);
+        url.searchParams.delete('q');
+        window.history.replaceState({}, '', url);
+      });
+    }
+
+    // Reset all filters
+    function resetAll() {
+      currentCategory = 'All';
+      searchQuery = '';
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      if (clearBtn) {
+        clearBtn.hidden = true;
+      }
+      const allTab = document.querySelector('[data-category="All"]');
+      if (allTab) {
+        updateActiveTabUI(allTab);
+      }
+      filterThemes();
+
+      const url = new URL(window.location);
+      url.searchParams.delete('category');
+      url.searchParams.delete('q');
+      window.history.replaceState({}, '', url);
+    }
+
+    if (resetLink) {
+      resetLink.addEventListener('click', resetAll);
+    }
+    if (emptyResetBtn) {
+      emptyResetBtn.addEventListener('click', resetAll);
+    }
+
+    // Initial filter run if query params were present
+    if (initialCategory || initialSearch) {
+      filterThemes();
+    }
+  })();
+</script>
+
+<style>
+  .themes-page-header {
+    background: var(--hero-glow);
+    padding: 3.5rem 0 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .header-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .page-badge-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    margin-bottom: 0.75rem;
+  }
+
+  .page-subtitle {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    max-width: 680px;
+    margin-bottom: 2.25rem;
+  }
+
+  /* Search & Filter Container */
+  .search-filter-wrap {
+    width: 100%;
+    max-width: 820px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .search-bar-box {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1.25rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .theme-search-input {
+    width: 100%;
+    padding: 1.05rem 3rem 1.05rem 3.4rem;
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-xl);
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+  }
+
+  .theme-search-input:focus {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px var(--brand-glow), var(--shadow-md);
+  }
+
+  .clear-search-btn {
+    position: absolute;
+    right: 1.2rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface-elevated);
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+  }
+
+  .clear-search-btn:hover {
+    color: var(--text-primary);
+    background: var(--border-subtle);
+  }
+
+  /* Horizontal Category Pill Scroll */
+  .category-scroll-container {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .category-pill-track {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    padding: 0 0.25rem;
+    min-width: min-content;
+  }
+
+  @media (min-width: 768px) {
+    .category-pill-track {
+      justify-content: center;
+    }
+  }
+
+  .category-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+  }
+
+  .category-tab:hover {
+    background: var(--bg-surface-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .category-tab.active {
+    background: var(--brand-primary);
+    color: #ffffff;
+    border-color: var(--brand-primary);
+    box-shadow: 0 2px 10px rgba(79, 70, 229, 0.35);
+  }
+
+  .tab-count {
+    font-size: 0.75rem;
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    background: var(--bg-surface-elevated);
+    color: var(--text-muted);
+  }
+
+  .category-tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* Catalog Section */
+  .themes-catalog-section {
+    padding: 2.5rem 0 5rem;
+  }
+
+  .filter-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+    font-size: 0.92rem;
+    color: var(--text-muted);
+  }
+
+  .reset-link {
+    color: var(--brand-primary);
+    font-weight: 600;
+    text-decoration: underline;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+
+  .reset-link:hover {
+    color: var(--brand-primary-hover);
+  }
+
+  .themes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    .themes-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 4.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 3rem auto;
+  }
+
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--bg-surface-elevated);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-title {
+    font-size: 1.35rem;
+    margin: 0;
+  }
+
+  .empty-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>

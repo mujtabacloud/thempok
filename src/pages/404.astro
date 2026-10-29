@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="404 — Page Not Found"
+  description="The page you are looking for does not exist on Thempok. Explore our free themes or documentation."
+>
+  <div class="not-found-page">
+    <div class="container container-sm not-found-container">
+      <div class="error-code-badge">404 ERROR</div>
+      <h1 class="not-found-title">Page not found</h1>
+      <p class="not-found-desc">
+        The route you are looking for doesn’t exist or has been moved. Check out our free themes catalog, read the documentation guides, or return to the homepage.
+      </p>
+
+      <div class="actions-group">
+        <a href="/" class="btn btn-primary btn-lg">
+          <Icon name="arrow-left" size={16} />
+          <span>Back to Homepage</span>
+        </a>
+        <a href="/themes/" class="btn btn-secondary btn-lg">
+          <span>Explore Themes</span>
+        </a>
+        <a href="/documentation/" class="btn btn-outline btn-lg">
+          <span>Read Docs</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found-page {
+    padding: 6rem 0 7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+  }
+
+  .not-found-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .error-code-badge {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brand-primary);
+    background: var(--brand-primary-light);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.08em;
+  }
+
+  .not-found-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+  }
+
+  .not-found-desc {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+  }
+
+  .actions-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>

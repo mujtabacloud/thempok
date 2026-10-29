@@ -1,0 +1,83 @@
+---
+import Icon from './Icon.astro';
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav aria-label="Breadcrumbs" class="breadcrumbs-nav">
+  <ol class="breadcrumbs-list">
+    <li class="breadcrumb-item">
+      <a href="/" class="breadcrumb-link">Home</a>
+    </li>
+    {items.map((item, index) => {
+      const isLast = index === items.length - 1;
+      return (
+        <li class="breadcrumb-item">
+          <span class="breadcrumb-separator" aria-hidden="true">
+            <Icon name="chevron-right" size={13} />
+          </span>
+          {isLast || !item.href ? (
+            <span class="breadcrumb-current" aria-current="page">
+              {item.label}
+            </span>
+          ) : (
+            <a href={item.href} class="breadcrumb-link">
+              {item.label}
+            </a>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs-nav {
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumbs-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  .breadcrumb-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .breadcrumb-separator {
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.5;
+  }
+
+  .breadcrumb-link {
+    color: var(--text-muted);
+    transition: color var(--transition-fast);
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--brand-primary);
+  }
+
+  .breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+</style>

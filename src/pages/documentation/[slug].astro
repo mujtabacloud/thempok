@@ -1,0 +1,31 @@
+---
+import DocLayout from '../../layouts/DocLayout.astro';
+import { docArticles, type DocArticle } from '../../data/docs';
+
+export function getStaticPaths() {
+  return Object.values(docArticles).map((article) => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: DocArticle;
+}
+
+const { article } = Astro.props;
+---
+
+<DocLayout
+  title={article.title}
+  subtitle={article.subtitle}
+  description={article.summary}
+  currentSlug={article.slug}
+  lastUpdated={article.lastUpdated}
+  readTime={article.readTime}
+  prev={article.prev}
+  next={article.next}
+  toc={article.toc}
+>
+  <Fragment set:html={article.contentHtml} />
+</DocLayout>

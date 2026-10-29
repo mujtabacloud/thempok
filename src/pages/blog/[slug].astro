@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Badge from '../../components/Badge.astro';
+import Icon from '../../components/Icon.astro';
+import { blogPosts, type BlogPost } from '../../data/blog';
+
+export function getStaticPaths() {
+  return blogPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+
+const relatedPosts = blogPosts
+  .filter((p) => p.slug !== post.slug)
+  .slice(0, 2);
+
+const breadcrumbs = [
+  { label: 'Blog', href: '/blog/' },
+  { label: post.title },
+];
+---
+
+<BaseLayout
+  title={`${post.title} — Thempok Blog`}
+  description={post.excerpt}
+>
+  <article class="blog-post-page">
+    <div class="container container-sm">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <!-- Post Header -->
+      <header class="post-header">
+        <div class="post-badges">
+          <Badge variant="brand">{post.category}</Badge>
+          <span class="post-read-time">
+            <Icon name="book" size={14} />
+            <span>{post.readTime}</span>
+          </span>
+        </div>
+
+        <h1 class="post-title">{post.title}</h1>
+
+        <div class="post-author-bar">
+          <div class="author-details">
+            <span class="author-avatar">{post.author.avatarText}</span>
+            <div>
+              <span class="author-name">{post.author.name}</span>
+              <span class="author-role">{post.author.role}</span>
+            </div>
+          </div>
+          <div class="post-date-wrap">
+            <span class="date-label">Published</span>
+            <span class="date-value">{post.publishDate}</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Post Prose Content -->
+      <div class="post-body prose">
+        <Fragment set:html={post.contentHtml} />
+      </div>
+
+      <!-- Post Tags -->
+      <footer class="post-footer">
+        <div class="tags-section">
+          <span class="tags-label">Tagged in:</span>
+          <div class="tags-list">
+            {post.tags.map((tag) => (
+              <span class="tag-badge">#{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="share-box">
+          <a href="/blog/" class="btn btn-secondary btn-sm">
+            <Icon name="arrow-left" size={14} />
+            <span>Back to all articles</span>
+          </a>
+        </div>
+      </footer>
+
+      <!-- Related Articles -->
+      <section class="related-posts-section">
+        <h3 class="related-heading">More from Thempok Journal</h3>
+        <div class="related-grid">
+          {relatedPosts.map((rel) => (
+            <a href={`/blog/${rel.slug}/`} class="card card-hoverable related-card">
+              <span class="rel-category">{rel.category}</span>
+              <h4 class="rel-title">{rel.title}</h4>
+              <span class="rel-read">{rel.readTime} &rarr;</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post-page {
+    padding: 2.5rem 0 5rem;
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .post-badges {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-read-time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1.75rem;
+  }
+
+  .post-author-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .author-details {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .author-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+  }
+
+  .author-role {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .post-date-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .date-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .date-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .post-body {
+    margin-bottom: 3rem;
+  }
+
+  .post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.75rem 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+  }
+
+  .tags-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .tags-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .tags-list {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-badge {
+    font-size: 0.8rem;
+    font-family: var(--font-mono);
+    color: var(--brand-primary);
+    background: var(--brand-primary-light);
+    padding: 2px 8px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Related */
+  .related-posts-section {
+    margin-top: 1rem;
+  }
+
+  .related-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .related-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .rel-category {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--brand-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .rel-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .related-card:hover .rel-title {
+    color: var(--brand-primary);
+  }
+
+  .rel-read {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: auto;
+    font-weight: 600;
+  }
+</style>

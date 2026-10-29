@@ -1,0 +1,531 @@
+---
+import type { Theme } from '../data/themes';
+
+interface Props {
+  theme: Theme;
+  size?: 'normal' | 'large';
+}
+
+const { theme, size = 'normal' } = Astro.props;
+const isLarge = size === 'large';
+---
+
+<div class={`theme-preview-window ${isLarge ? 'is-large' : ''}`} style={`--accent-color: ${theme.preview.accentColor}; --bg-preview: ${theme.preview.themeColor};`}>
+  <!-- Simulated Browser Window Header -->
+  <div class="preview-header">
+    <div class="window-controls">
+      <span class="control-dot red"></span>
+      <span class="control-dot yellow"></span>
+      <span class="control-dot green"></span>
+    </div>
+    <div class="address-bar">
+      <span class="lock-icon">🔒</span>
+      <span class="url-text">thempok.dev/{theme.slug}</span>
+    </div>
+    <div class="window-actions">
+      <span class="action-dash"></span>
+      <span class="action-square"></span>
+    </div>
+  </div>
+
+  <!-- Simulated Viewport Canvas -->
+  <div class="preview-viewport">
+    {theme.preview.mockupType === 'browser' && (
+      <div class="viewport-content browser-layout">
+        <header class="mini-nav">
+          <div class="mini-brand">
+            <span class="brand-gem"></span>
+            <span class="brand-text">{theme.title}</span>
+          </div>
+          <div class="mini-links">
+            <span class="pill-link active"></span>
+            <span class="pill-link"></span>
+            <span class="pill-link"></span>
+          </div>
+        </header>
+
+        <div class="mini-hero">
+          <span class="mini-pill">v{theme.version} • {theme.category}</span>
+          <h4 class="mini-title">{theme.preview.heroHeadline}</h4>
+          <p class="mini-subtitle">{theme.tagline}</p>
+          <div class="mini-buttons">
+            <span class="mini-btn primary">Get Started</span>
+            <span class="mini-btn secondary">Explore</span>
+          </div>
+        </div>
+
+        <div class="mini-cards-grid">
+          <div class="mini-card highlight">
+            <div class="mini-card-bar"></div>
+            <div class="mini-card-line full"></div>
+            <div class="mini-card-line half"></div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-card-bar"></div>
+            <div class="mini-card-line full"></div>
+            <div class="mini-card-line half"></div>
+          </div>
+          <div class="mini-card">
+            <div class="mini-card-bar"></div>
+            <div class="mini-card-line full"></div>
+            <div class="mini-card-line half"></div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {theme.preview.mockupType === 'docs' && (
+      <div class="viewport-content docs-layout">
+        <aside class="mini-sidebar">
+          <div class="sidebar-item active">Introduction</div>
+          <div class="sidebar-item">Quickstart</div>
+          <div class="sidebar-item">Architecture</div>
+          <div class="sidebar-item">API Reference</div>
+          <div class="sidebar-item">Deployment</div>
+        </aside>
+        <main class="mini-docs-body">
+          <div class="mini-docs-header">
+            <span class="mini-pill">Documentation</span>
+            <h4 class="mini-title">{theme.preview.heroHeadline}</h4>
+          </div>
+          <div class="mini-code-window">
+            <div class="code-line"><span class="token-keyword">import</span> &#123; createClient &#125; <span class="token-keyword">from</span> <span class="token-string">'@thempok/sdk'</span>;</div>
+            <div class="code-line"><span class="token-keyword">const</span> client = createClient(&#123; apiKey: <span class="token-string">'tp_live_...'</span> &#125;);</div>
+            <div class="code-line"><span class="token-keyword">await</span> client.sync();</div>
+          </div>
+          <div class="mini-card-line full"></div>
+          <div class="mini-card-line three-quarters"></div>
+        </main>
+      </div>
+    )}
+
+    {theme.preview.mockupType === 'code' && (
+      <div class="viewport-content terminal-layout">
+        <div class="terminal-banner">THEMPOK TERMINAL v{theme.version} [CLI MODE]</div>
+        <div class="cli-row"><span class="cli-prompt">$</span> <span class="cli-cmd">npx create-thempok-site --theme={theme.slug}</span></div>
+        <div class="cli-output">[ok] Downloading theme package...</div>
+        <div class="cli-output">[ok] Extracting templates and components...</div>
+        <div class="cli-row"><span class="cli-prompt">$</span> <span class="cli-cmd">npm run dev</span></div>
+        <div class="cli-output success">&gt; astro dev --port 4321 [Ready in 184ms]</div>
+        <div class="cli-cursor"></div>
+      </div>
+    )}
+
+    {theme.preview.mockupType === 'card-grid' && (
+      <div class="viewport-content store-layout">
+        <header class="mini-nav">
+          <div class="mini-brand">
+            <span class="brand-gem"></span>
+            <span class="brand-text">{theme.title}</span>
+          </div>
+          <div class="mini-pill-cart">Cart (0)</div>
+        </header>
+        <div class="mini-hero compact">
+          <h4 class="mini-title">{theme.preview.heroHeadline}</h4>
+        </div>
+        <div class="mini-cards-grid four-col">
+          <div class="mini-card item">
+            <div class="item-visual" style={`background: ${theme.preview.accentColor}25`}></div>
+            <div class="mini-card-line full"></div>
+            <div class="item-price">Free</div>
+          </div>
+          <div class="mini-card item">
+            <div class="item-visual" style={`background: ${theme.preview.accentColor}40`}></div>
+            <div class="mini-card-line full"></div>
+            <div class="item-price">Free</div>
+          </div>
+          <div class="mini-card item">
+            <div class="item-visual" style={`background: ${theme.preview.accentColor}30`}></div>
+            <div class="mini-card-line full"></div>
+            <div class="item-price">Free</div>
+          </div>
+          <div class="mini-card item">
+            <div class="item-visual" style={`background: ${theme.preview.accentColor}50`}></div>
+            <div class="mini-card-line full"></div>
+            <div class="item-price">Free</div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .theme-preview-window {
+    border-radius: var(--radius-md);
+    background-color: var(--bg-preview, #0f172a);
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    position: relative;
+    user-select: none;
+    aspect-ratio: 16 / 10;
+  }
+
+  .theme-preview-window.is-large {
+    aspect-ratio: 16 / 9;
+    max-height: 520px;
+  }
+
+  /* Header bar */
+  .preview-header {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.85rem;
+    gap: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .window-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .control-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+  }
+
+  .control-dot.red { background: #ef4444; }
+  .control-dot.yellow { background: #f59e0b; }
+  .control-dot.green { background: #10b981; }
+
+  .address-bar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-xs);
+    height: 20px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    gap: 0.35rem;
+    max-width: 260px;
+    margin: 0 auto;
+  }
+
+  .lock-icon {
+    font-size: 0.65rem;
+    opacity: 0.7;
+  }
+
+  .url-text {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .window-actions {
+    display: flex;
+    gap: 6px;
+    opacity: 0.4;
+  }
+
+  .action-dash { width: 8px; height: 1px; background: white; margin-top: 4px; }
+  .action-square { width: 7px; height: 7px; border: 1px solid white; }
+
+  /* Viewport */
+  .preview-viewport {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.03), transparent 70%);
+  }
+
+  .viewport-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    color: #f8fafc;
+  }
+
+  /* Mini Nav */
+  .mini-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mini-brand {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .brand-gem {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--accent-color, #6366f1);
+  }
+
+  .brand-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .mini-links {
+    display: flex;
+    gap: 6px;
+  }
+
+  .pill-link {
+    width: 24px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .pill-link.active {
+    background: var(--accent-color, #6366f1);
+  }
+
+  .mini-pill-cart {
+    font-size: 0.65rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  /* Mini Hero */
+  .mini-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+  }
+
+  .mini-hero.compact {
+    padding: 0;
+  }
+
+  .mini-pill {
+    align-self: flex-start;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--accent-color, #38bdf8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .mini-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #ffffff;
+    max-width: 90%;
+  }
+
+  .is-large .mini-title {
+    font-size: 1.35rem;
+  }
+
+  .mini-subtitle {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .mini-buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: 0.25rem;
+  }
+
+  .mini-btn {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  .mini-btn.primary {
+    background: var(--accent-color, #6366f1);
+    color: #ffffff;
+  }
+
+  .mini-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+  }
+
+  /* Mini cards */
+  .mini-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: auto;
+  }
+
+  .mini-cards-grid.four-col {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .mini-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .mini-card.highlight {
+    border-color: var(--accent-color, #6366f1);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .mini-card-bar {
+    width: 40%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent-color, #6366f1);
+  }
+
+  .mini-card-line {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
+
+  .mini-card-line.full { width: 100%; }
+  .mini-card-line.half { width: 50%; }
+  .mini-card-line.three-quarters { width: 75%; }
+
+  .item-visual {
+    aspect-ratio: 16/9;
+    border-radius: 4px;
+  }
+
+  .item-price {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent-color, #f59e0b);
+  }
+
+  /* Docs layout */
+  .docs-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 0.85rem;
+  }
+
+  .mini-sidebar {
+    width: 28%;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    padding-right: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .sidebar-item {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 3px 6px;
+    border-radius: 3px;
+  }
+
+  .sidebar-item.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+  }
+
+  .mini-docs-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .mini-code-window {
+    background: #000000;
+    border-radius: 4px;
+    padding: 0.4rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.4;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .token-keyword { color: #f43f5e; }
+  .token-string { color: #10b981; }
+
+  /* Terminal layout */
+  .terminal-layout {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .terminal-banner {
+    color: var(--accent-color, #22c55e);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    font-size: 0.68rem;
+  }
+
+  .cli-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .cli-prompt {
+    color: var(--accent-color, #22c55e);
+    font-weight: 700;
+  }
+
+  .cli-cmd {
+    color: #f8fafc;
+  }
+
+  .cli-output {
+    color: rgba(255, 255, 255, 0.6);
+    padding-left: 0.85rem;
+    font-size: 0.65rem;
+  }
+
+  .cli-output.success {
+    color: #34d399;
+  }
+
+  .cli-cursor {
+    width: 6px;
+    height: 12px;
+    background: var(--accent-color, #22c55e);
+    margin-left: 0.85rem;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
