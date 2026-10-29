@@ -31,7 +31,7 @@ author:
   avatarText: TP
   url: https://github.com/thempok
 preview:
-  mockupType: browser
+  mockupType: card-grid
   themeColor: "#0b1120"
   accentColor: "#06b6d4"
   heroHeadline: RESTful API v2.4 Reference & SDK Documentation
