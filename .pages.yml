@@ -2,5 +2,360 @@ media:
   input: public/images
   output: /images
 
-# This repository uses Astro content collections and does not require the
-# full .pages.yml schema during the GitHub Pages build.
+content:
+  # --------------------------------------------------------------------------
+  # 1. THEMES COLLECTION
+  # --------------------------------------------------------------------------
+  - name: themes
+    label: Themes
+    type: collection
+    path: src/content/themes
+    format: yaml-frontmatter
+    view:
+      primary: title
+      fields: [title, category, version, featured, latest]
+      sort: [title, version]
+      default:
+        sort: title
+        order: asc
+    fields:
+      - name: title
+        label: Theme Title
+        type: string
+        required: true
+
+      - name: tagline
+        label: Tagline
+        type: string
+        required: true
+
+      - name: description
+        label: Short Description
+        type: text
+        required: true
+
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values:
+            - Portfolio
+            - Documentation
+            - Blog & Editorial
+            - SaaS & Landing
+            - E-commerce
+            - Agency
+
+      - name: featured
+        label: Featured Theme
+        type: boolean
+        default: false
+
+      - name: latest
+        label: Latest Release
+        type: boolean
+        default: false
+
+      - name: tags
+        label: Search Tags
+        type: string
+        list: true
+
+      - name: technologies
+        label: Technologies / Stack
+        type: string
+        list: true
+
+      - name: version
+        label: Version
+        type: string
+        default: "1.0.0"
+
+      - name: lastUpdated
+        label: Last Updated Date
+        type: string
+
+      - name: license
+        label: License
+        type: string
+        default: "MIT"
+
+      - name: stars
+        label: Star Count
+        type: number
+        default: 0
+
+      - name: downloads
+        label: Download Count
+        type: number
+        default: 0
+
+      - name: demoUrl
+        label: Live Demo URL
+        type: string
+        required: true
+
+      - name: githubUrl
+        label: GitHub Repository URL
+        type: string
+        required: true
+
+      - name: author
+        label: Author Info
+        type: object
+        fields:
+          - name: name
+            label: Author Name
+            type: string
+            required: true
+          - name: avatarText
+            label: Avatar Initials
+            type: string
+            default: "TP"
+          - name: url
+            label: Author Profile URL
+            type: string
+
+      - name: preview
+        label: Interactive Preview Graphic
+        type: object
+        fields:
+          - name: mockupType
+            label: Mockup Layout
+            type: select
+            options:
+              values:
+                - browser
+                - docs
+                - code
+                - card-grid
+          - name: themeColor
+            label: Background Hex Color
+            type: string
+            default: "#0f172a"
+          - name: accentColor
+            label: Accent Hex Color
+            type: string
+            default: "#38bdf8"
+          - name: heroHeadline
+            label: Preview Headline
+            type: string
+
+      - name: features
+        label: Feature Checklist
+        type: string
+        list: true
+
+      - name: requirements
+        label: System Requirements
+        type: string
+        list: true
+
+      - name: highlights
+        label: Value Highlights
+        type: object
+        list:
+          collapsible:
+            summary: "{title}"
+        fields:
+          - name: title
+            label: Title
+            type: string
+          - name: desc
+            label: Description
+            type: string
+
+      - name: installCommands
+        label: Install Commands
+        type: object
+        fields:
+          - name: create
+            label: Astro Create Command
+            type: string
+          - name: gitClone
+            label: Git Clone Command
+            type: string
+          - name: install
+            label: Install Command
+            type: string
+            default: "npm install"
+          - name: run
+            label: Dev Run Command
+            type: string
+            default: "npm run dev"
+
+      - name: projectStructure
+        label: Project Structure Files
+        type: string
+        list: true
+
+      - name: body
+        label: Theme Documentation / Readme
+        type: rich-text
+        options:
+          format: markdown
+
+  # --------------------------------------------------------------------------
+  # 2. DOCUMENTATION GUIDES
+  # --------------------------------------------------------------------------
+  - name: docs
+    label: Documentation
+    type: collection
+    path: src/content/docs
+    format: yaml-frontmatter
+    view:
+      primary: title
+      fields: [title, section, order, readTime]
+      sort: [section, order]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: title
+        label: Guide Title
+        type: string
+        required: true
+
+      - name: subtitle
+        label: Subtitle
+        type: string
+
+      - name: section
+        label: Section
+        type: select
+        required: true
+        options:
+          values:
+            - "Getting Started"
+            - "Customization"
+            - "Deployment & Publishing"
+
+      - name: order
+        label: Sidebar Order
+        type: number
+        default: 1
+
+      - name: badge
+        label: Badge (Optional)
+        type: string
+
+      - name: readTime
+        label: Estimated Read Time
+        type: string
+        default: "3 min read"
+
+      - name: lastUpdated
+        label: Last Updated
+        type: string
+
+      - name: summary
+        label: Guide Summary
+        type: text
+
+      - name: prev
+        label: Previous Guide
+        type: object
+        fields:
+          - name: title
+            label: Title
+            type: string
+          - name: slug
+            label: Slug
+            type: string
+
+      - name: next
+        label: Next Guide
+        type: object
+        fields:
+          - name: title
+            label: Title
+            type: string
+          - name: slug
+            label: Slug
+            type: string
+
+      - name: body
+        label: Guide Content
+        type: rich-text
+        options:
+          format: markdown
+
+  # --------------------------------------------------------------------------
+  # 3. BLOG POSTS
+  # --------------------------------------------------------------------------
+  - name: blog
+    label: Blog
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    view:
+      primary: title
+      fields: [title, category, publishDate, featured]
+      sort: [publishDate]
+      default:
+        sort: publishDate
+        order: desc
+    fields:
+      - name: title
+        label: Article Title
+        type: string
+        required: true
+
+      - name: excerpt
+        label: Short Excerpt
+        type: text
+        required: true
+
+      - name: category
+        label: Category
+        type: select
+        required: true
+        options:
+          values:
+            - "Astro & Frameworks"
+            - "CSS & Design Systems"
+            - "Performance & Web Vitals"
+            - "Developer Experience"
+
+      - name: publishDate
+        label: Publication Date
+        type: string
+        required: true
+
+      - name: readTime
+        label: Estimated Read Time
+        type: string
+        default: "5 min read"
+
+      - name: featured
+        label: Featured Post
+        type: boolean
+        default: false
+
+      - name: author
+        label: Author Details
+        type: object
+        fields:
+          - name: name
+            label: Author Name
+            type: string
+            required: true
+          - name: role
+            label: Role
+            type: string
+          - name: avatarText
+            label: Avatar Initials
+            type: string
+            default: "TP"
+
+      - name: tags
+        label: Article Tags
+        type: string
+        list: true
+
+      - name: body
+        label: Post Content
+        type: rich-text
+        options:
+          format: markdown
