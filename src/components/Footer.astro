@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '../data/site';
+import { siteConfig, getRelativePath } from '../data/site';
 import Icon from './Icon.astro';
 ---
 
@@ -7,7 +7,7 @@ import Icon from './Icon.astro';
   <!-- Top Section: Main Columns -->
   <div class="container footer-top">
     <div class="footer-brand-col">
-      <a href="/" class="footer-brand-link">
+      <a href={getRelativePath('/')} class="footer-brand-link">
         <div class="brand-symbol">
           <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
             <rect width="32" height="32" rx="8" fill="url(#tp-foot-grad)" />

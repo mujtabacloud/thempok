@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import { getRelativePath } from '../data/site';
 ---
 
 <BaseLayout
@@ -16,14 +17,14 @@ import Icon from '../components/Icon.astro';
       </p>
 
       <div class="actions-group">
-        <a href="/" class="btn btn-primary btn-lg">
+        <a href={getRelativePath('/')} class="btn btn-primary btn-lg">
           <Icon name="arrow-left" size={16} />
           <span>Back to Homepage</span>
         </a>
-        <a href="/themes/" class="btn btn-secondary btn-lg">
+        <a href={getRelativePath('/themes/')} class="btn btn-secondary btn-lg">
           <span>Explore Themes</span>
         </a>
-        <a href="/documentation/" class="btn btn-outline btn-lg">
+        <a href={getRelativePath('/documentation/')} class="btn btn-outline btn-lg">
           <span>Read Docs</span>
         </a>
       </div>

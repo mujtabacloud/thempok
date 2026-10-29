@@ -1,6 +1,7 @@
 ---
 import { docSections } from '../data/docs';
 import Badge from './Badge.astro';
+import { getRelativePath } from '../data/site';
 
 interface Props {
   currentSlug?: string;
@@ -25,7 +26,7 @@ const { currentSlug = '' } = Astro.props;
             return (
               <li>
                 <a
-                  href={`/documentation/${item.slug}/`}
+                  href={getRelativePath(`/documentation/${item.slug}/`)}
                   class={`group-link ${isActive ? 'active' : ''}`}
                   aria-current={isActive ? 'page' : undefined}
                 >

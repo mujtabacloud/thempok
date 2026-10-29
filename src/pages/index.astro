@@ -6,6 +6,7 @@ import Icon from '../components/Icon.astro';
 import { themesData } from '../data/themes';
 import { docSections } from '../data/docs';
 import { blogPosts } from '../data/blog';
+import { getRelativePath } from '../data/site';
 
 const featuredThemes = themesData.filter((t) => t.featured);
 const latestThemes = themesData.filter((t) => t.latest).slice(0, 3);
@@ -37,11 +38,11 @@ const latestPosts = blogPosts.slice(0, 2);
       </p>
 
       <div class="hero-cta-group">
-        <a href="/themes/" class="btn btn-primary btn-lg">
+        <a href={getRelativePath('/themes/')} class="btn btn-primary btn-lg">
           <span>Explore Themes</span>
           <Icon name="arrow-right" size={16} />
         </a>
-        <a href="/documentation/getting-started/" class="btn btn-secondary btn-lg">
+        <a href={getRelativePath('/documentation/getting-started/')} class="btn btn-secondary btn-lg">
           <Icon name="book" size={17} />
           <span>Read Documentation</span>
         </a>
@@ -131,7 +132,7 @@ const latestPosts = blogPosts.slice(0, 2);
             Hand-picked templates designed for speed, typography, and effortless customization.
           </p>
         </div>
-        <a href="/themes/" class="btn btn-secondary hide-mobile">
+        <a href={getRelativePath('/themes/')} class="btn btn-secondary hide-mobile">
           <span>View All Themes ({themesData.length})</span>
           <Icon name="arrow-right" size={15} />
         </a>
@@ -144,7 +145,7 @@ const latestPosts = blogPosts.slice(0, 2);
       </div>
 
       <div class="mobile-section-cta hide-desktop">
-        <a href="/themes/" class="btn btn-secondary btn-full">
+        <a href={getRelativePath('/themes/')} class="btn btn-secondary btn-full">
           <span>View All Themes ({themesData.length})</span>
           <Icon name="arrow-right" size={15} />
         </a>
@@ -165,7 +166,7 @@ const latestPosts = blogPosts.slice(0, 2);
             Recently added themes covering SaaS landing pages, digital storefronts, and portfolios.
           </p>
         </div>
-        <a href="/themes/?filter=latest" class="btn btn-outline hide-mobile">
+        <a href={getRelativePath('/themes/?filter=latest')} class="btn btn-outline hide-mobile">
           <span>Browse All</span>
           <Icon name="arrow-right" size={14} />
         </a>
@@ -192,7 +193,7 @@ const latestPosts = blogPosts.slice(0, 2);
             Clear, step-by-step guides covering installation, styling systems, and GitHub Pages deployment.
           </p>
         </div>
-        <a href="/documentation/" class="btn btn-secondary hide-mobile">
+        <a href={getRelativePath('/documentation/')} class="btn btn-secondary hide-mobile">
           <span>Visit Documentation Hub</span>
           <Icon name="arrow-right" size={15} />
         </a>
@@ -208,7 +209,7 @@ const latestPosts = blogPosts.slice(0, 2);
             <ul class="doc-sec-links">
               {sec.items.map((item) => (
                 <li>
-                  <a href={`/documentation/${item.slug}/`} class="doc-sec-link">
+                  <a href={getRelativePath(`/documentation/${item.slug}/`)} class="doc-sec-link">
                     <span class="link-bullet">&rarr;</span>
                     <span class="link-text">{item.title}</span>
                     {item.badge && <span class="badge badge-neutral mini">{item.badge}</span>}
@@ -235,7 +236,7 @@ const latestPosts = blogPosts.slice(0, 2);
             Deep-dives into modern web architecture, CSS techniques, and static site workflows.
           </p>
         </div>
-        <a href="/blog/" class="btn btn-secondary hide-mobile">
+        <a href={getRelativePath('/blog/')} class="btn btn-secondary hide-mobile">
           <span>Read All Articles</span>
           <Icon name="arrow-right" size={15} />
         </a>
@@ -250,7 +251,7 @@ const latestPosts = blogPosts.slice(0, 2);
             </div>
 
             <h3 class="blog-card-title">
-              <a href={`/blog/${post.slug}/`}>{post.title}</a>
+              <a href={getRelativePath(`/blog/${post.slug}/`)}>{post.title}</a>
             </h3>
 
             <p class="blog-card-excerpt">{post.excerpt}</p>
@@ -260,7 +261,7 @@ const latestPosts = blogPosts.slice(0, 2);
                 <span class="author-avatar">{post.author.avatarText}</span>
                 <span class="author-name">{post.author.name}</span>
               </div>
-              <a href={`/blog/${post.slug}/`} class="btn btn-ghost btn-sm">
+              <a href={getRelativePath(`/blog/${post.slug}/`)} class="btn btn-ghost btn-sm">
                 <span>Read Article</span>
                 <Icon name="arrow-right" size={14} />
               </a>
@@ -282,8 +283,8 @@ const latestPosts = blogPosts.slice(0, 2);
           </p>
         </div>
         <div class="cta-actions">
-          <a href="/themes/" class="btn btn-primary btn-lg">Browse Themes</a>
-          <a href="/about/" class="btn btn-secondary btn-lg">Learn About Thempok</a>
+          <a href={getRelativePath('/themes/')} class="btn btn-primary btn-lg">Browse Themes</a>
+          <a href={getRelativePath('/about/')} class="btn btn-secondary btn-lg">Learn About Thempok</a>
         </div>
       </div>
     </div>

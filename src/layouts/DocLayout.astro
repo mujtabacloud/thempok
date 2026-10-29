@@ -3,6 +3,7 @@ import BaseLayout from './BaseLayout.astro';
 import DocSidebar from '../components/DocSidebar.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Icon from '../components/Icon.astro';
+import { getRelativePath } from '../data/site';
 
 interface Props {
   title: string;
@@ -29,7 +30,7 @@ const {
 } = Astro.props;
 
 const breadcrumbs = [
-  { label: 'Documentation', href: '/documentation/' },
+  { label: 'Documentation', href: getRelativePath('/documentation/') },
   { label: title },
 ];
 ---
@@ -88,7 +89,7 @@ const breadcrumbs = [
         <!-- Next / Prev pagination -->
         <nav class="doc-pagination-nav" aria-label="Documentation navigation">
           {prev ? (
-            <a href={`/documentation/${prev.slug}/`} class="pagination-btn prev">
+            <a href={getRelativePath(`/documentation/${prev.slug}/`)} class="pagination-btn prev">
               <span class="pagination-sub">
                 <Icon name="arrow-left" size={13} />
                 <span>Previous</span>
@@ -100,7 +101,7 @@ const breadcrumbs = [
           )}
 
           {next && (
-            <a href={`/documentation/${next.slug}/`} class="pagination-btn next">
+            <a href={getRelativePath(`/documentation/${next.slug}/`)} class="pagination-btn next">
               <span class="pagination-sub">
                 <span>Next</span>
                 <Icon name="arrow-right" size={13} />

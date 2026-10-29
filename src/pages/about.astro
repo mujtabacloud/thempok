@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Badge from '../components/Badge.astro';
 import Icon from '../components/Icon.astro';
+import { getRelativePath } from '../data/site';
 ---
 
 <BaseLayout
@@ -131,7 +132,7 @@ import Icon from '../components/Icon.astro';
             </summary>
             <div class="accordion-body">
               <p>
-                Yes! We welcome contributions. Check our <a href="/documentation/contributing-themes/">Contributing Themes Guide</a> to learn about our quality standards, licensing requirements, and submission process.
+                Yes! We welcome contributions. Check our <a href={getRelativePath('/documentation/contributing-themes/')}>Contributing Themes Guide</a> to learn about our quality standards, licensing requirements, and submission process.
               </p>
             </div>
           </details>
@@ -169,8 +170,8 @@ import Icon from '../components/Icon.astro';
           Browse our collection of themes or read our documentation to get started today.
         </p>
         <div class="about-cta-buttons">
-          <a href="/themes/" class="btn btn-primary btn-lg">Browse Themes</a>
-          <a href="/documentation/getting-started/" class="btn btn-secondary btn-lg">Quick Start Guide</a>
+          <a href={getRelativePath('/themes/')} class="btn btn-primary btn-lg">Browse Themes</a>
+          <a href={getRelativePath('/documentation/getting-started/')} class="btn btn-secondary btn-lg">Quick Start Guide</a>
         </div>
       </div>
     </div>

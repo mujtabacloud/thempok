@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import { getRelativePath } from '../data/site';
 
 export interface BreadcrumbItem {
   label: string;
@@ -16,7 +17,7 @@ const { items } = Astro.props;
 <nav aria-label="Breadcrumbs" class="breadcrumbs-nav">
   <ol class="breadcrumbs-list">
     <li class="breadcrumb-item">
-      <a href="/" class="breadcrumb-link">Home</a>
+      <a href={getRelativePath('/')} class="breadcrumb-link">Home</a>
     </li>
     {items.map((item, index) => {
       const isLast = index === items.length - 1;

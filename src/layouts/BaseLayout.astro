@@ -1,7 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { siteConfig } from '../data/site';
+import { siteConfig, getRelativePath } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
@@ -28,8 +28,8 @@ const currentPath = Astro.url.pathname;
     <meta name="generator" content={Astro.generator} />
 
     <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={getRelativePath('/favicon.svg')} />
+    <link rel="icon" href={getRelativePath('/favicon.ico')} />
 
     <!-- SEO & Metadata -->
     <title>{pageTitle}</title>

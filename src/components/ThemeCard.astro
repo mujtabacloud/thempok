@@ -3,12 +3,14 @@ import type { Theme } from '../data/themes';
 import ThemePreviewGraphic from './ThemePreviewGraphic.astro';
 import Badge from './Badge.astro';
 import Icon from './Icon.astro';
+import { getRelativePath } from '../data/site';
 
 interface Props {
   theme: Theme;
 }
 
 const { theme } = Astro.props;
+const themeUrl = getRelativePath(`/themes/${theme.slug}/`);
 ---
 
 <article
@@ -21,7 +23,7 @@ const { theme } = Astro.props;
   data-description={theme.description.toLowerCase()}
 >
   <!-- Preview Wrapper -->
-  <a href={`/themes/${theme.slug}/`} class="theme-card-preview-link" aria-label={`View ${theme.title} details`}>
+  <a href={themeUrl} class="theme-card-preview-link" aria-label={`View ${theme.title} details`}>
     <ThemePreviewGraphic theme={theme} />
     <span class="preview-overlay">
       <span class="btn btn-sm btn-primary">View Details &rarr;</span>
@@ -51,7 +53,7 @@ const { theme } = Astro.props;
     </div>
 
     <h3 class="theme-card-title">
-      <a href={`/themes/${theme.slug}/`}>{theme.title}</a>
+      <a href={themeUrl}>{theme.title}</a>
     </h3>
 
     <p class="theme-card-desc">{theme.tagline}</p>
@@ -68,7 +70,7 @@ const { theme } = Astro.props;
 
     <!-- Actions -->
     <div class="theme-card-actions">
-      <a href={`/themes/${theme.slug}/`} class="btn btn-primary btn-sm btn-flex">
+      <a href={themeUrl} class="btn btn-primary btn-sm btn-flex">
         <span>Get Theme</span>
         <Icon name="arrow-right" size={14} />
       </a>

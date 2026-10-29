@@ -1,5 +1,5 @@
 ---
-import { siteConfig } from '../data/site';
+import { siteConfig, getRelativePath } from '../data/site';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -7,9 +7,12 @@ interface Props {
 }
 
 const { currentPath = Astro.url.pathname } = Astro.props;
+const homePath = getRelativePath('/');
 
 const isActive = (href: string) => {
-  if (href === '/') return currentPath === '/';
+  if (href === homePath || href === '/') {
+    return currentPath === homePath || currentPath === '/' || currentPath === `${homePath}/`;
+  }
   return currentPath.startsWith(href);
 };
 ---
@@ -17,7 +20,7 @@ const isActive = (href: string) => {
 <header class="site-header" id="site-header">
   <div class="container header-container">
     <!-- Brand Logo -->
-    <a href="/" class="brand-link" aria-label="Thempok Homepage">
+    <a href={homePath} class="brand-link" aria-label="Thempok Homepage">
       <div class="brand-symbol">
         <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
           <rect width="32" height="32" rx="8" fill="url(#tp-grad)" />

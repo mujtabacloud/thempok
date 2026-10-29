@@ -4,6 +4,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
 import { blogPosts, type BlogPost } from '../../data/blog';
+import { getRelativePath } from '../../data/site';
 
 export function getStaticPaths() {
   return blogPosts.map((post) => ({
@@ -23,7 +24,7 @@ const relatedPosts = blogPosts
   .slice(0, 2);
 
 const breadcrumbs = [
-  { label: 'Blog', href: '/blog/' },
+  { label: 'Blog', href: getRelativePath('/blog/') },
   { label: post.title },
 ];
 ---
@@ -80,7 +81,7 @@ const breadcrumbs = [
         </div>
 
         <div class="share-box">
-          <a href="/blog/" class="btn btn-secondary btn-sm">
+          <a href={getRelativePath('/blog/')} class="btn btn-secondary btn-sm">
             <Icon name="arrow-left" size={14} />
             <span>Back to all articles</span>
           </a>
@@ -92,7 +93,7 @@ const breadcrumbs = [
         <h3 class="related-heading">More from Thempok Journal</h3>
         <div class="related-grid">
           {relatedPosts.map((rel) => (
-            <a href={`/blog/${rel.slug}/`} class="card card-hoverable related-card">
+            <a href={getRelativePath(`/blog/${rel.slug}/`)} class="card card-hoverable related-card">
               <span class="rel-category">{rel.category}</span>
               <h4 class="rel-title">{rel.title}</h4>
               <span class="rel-read">{rel.readTime} &rarr;</span>

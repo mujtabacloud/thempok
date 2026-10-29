@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
 import { docSections, docArticles } from '../../data/docs';
+import { getRelativePath } from '../../data/site';
 
 const allArticles = Object.values(docArticles);
 ---
@@ -51,11 +52,11 @@ const allArticles = Object.values(docArticles);
             Learn the fastest path to selecting a theme, initializing your local development server, and previewing with hot module replacement.
           </p>
           <div class="quickstart-actions">
-            <a href="/documentation/getting-started/" class="btn btn-primary">
+            <a href={getRelativePath('/documentation/getting-started/')} class="btn btn-primary">
               <span>Read Quick Start Guide</span>
               <Icon name="arrow-right" size={15} />
             </a>
-            <a href="/documentation/theme-structure/" class="btn btn-secondary">
+            <a href={getRelativePath('/documentation/theme-structure/')} class="btn btn-secondary">
               Theme Architecture
             </a>
           </div>
@@ -91,7 +92,7 @@ const allArticles = Object.values(docArticles);
                 const article = docArticles[item.slug];
                 return (
                   <a
-                    href={`/documentation/${item.slug}/`}
+                    href={getRelativePath(`/documentation/${item.slug}/`)}
                     class="card card-hoverable guide-card"
                     data-guide-card
                     data-guide-title={item.title.toLowerCase()}

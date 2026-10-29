@@ -6,6 +6,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Badge from '../../components/Badge.astro';
 import Icon from '../../components/Icon.astro';
 import { themesData, type Theme } from '../../data/themes';
+import { getRelativePath } from '../../data/site';
 
 export function getStaticPaths() {
   return themesData.map((theme) => ({
@@ -26,7 +27,7 @@ const relatedThemes = themesData
   .slice(0, 3);
 
 const breadcrumbs = [
-  { label: 'Themes', href: '/themes/' },
+  { label: 'Themes', href: getRelativePath('/themes/') },
   { label: theme.title },
 ];
 ---
@@ -277,7 +278,7 @@ cd my-portfolio
             <h2 class="section-title">Similar Themes You Might Like</h2>
             <p class="section-subtitle">Explore more free templates designed for high performance.</p>
           </div>
-          <a href="/themes/" class="btn btn-secondary hide-mobile">
+          <a href={getRelativePath('/themes/')} class="btn btn-secondary hide-mobile">
             <span>View All Themes</span>
             <Icon name="arrow-right" size={14} />
           </a>
