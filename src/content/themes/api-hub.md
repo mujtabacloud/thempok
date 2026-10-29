@@ -24,7 +24,7 @@ lastUpdated: September 2026
 license: MIT
 stars: 378
 downloads: 1910
-demoUrl: https://demo.thempok.dev/preview/api-hub
+demoUrl: https://mujtabacloud.github.io/qr-code-generator-scanner/
 githubUrl: https://github.com/thempok/theme-api-hub
 author:
   name: Alex Rivera
