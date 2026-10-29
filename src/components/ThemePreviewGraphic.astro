@@ -1,5 +1,6 @@
 ---
 import type { Theme } from '../utils/content';
+import { getRelativePath } from '../data/site';
 
 interface Props {
   theme: Theme;
@@ -8,6 +9,8 @@ interface Props {
 
 const { theme, size = 'normal' } = Astro.props;
 const isLarge = size === 'large';
+const hasCustomImage = Boolean(theme.image);
+const imageUrl = theme.image ? getRelativePath(theme.image) : '';
 ---
 
 <div class={`theme-preview-window ${isLarge ? 'is-large' : ''}`} style={`--accent-color: ${theme.preview.accentColor}; --bg-preview: ${theme.preview.themeColor};`}>
@@ -29,8 +32,19 @@ const isLarge = size === 'large';
   </div>
 
   <!-- Simulated Viewport Canvas -->
-  <div class="preview-viewport">
-    {theme.preview.mockupType === 'browser' && (
+  <div class={`preview-viewport ${hasCustomImage ? 'has-custom-image' : ''}`}>
+    {hasCustomImage ? (
+      <div class="viewport-image-wrapper">
+        <img
+          src={imageUrl}
+          alt={`${theme.title} preview screenshot`}
+          class="preview-custom-image"
+          loading={isLarge ? 'eager' : 'lazy'}
+        />
+      </div>
+    ) : (
+      <>
+        {theme.preview.mockupType === 'browser' && (
       <div class="viewport-content browser-layout">
         <header class="mini-nav">
           <div class="mini-brand">
@@ -147,6 +161,8 @@ const isLarge = size === 'large';
         </div>
       </div>
     )}
+      </>
+    )}
   </div>
 </div>
 
@@ -242,6 +258,32 @@ const isLarge = size === 'large';
     overflow: hidden;
     position: relative;
     background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.03), transparent 70%);
+  }
+
+  .preview-viewport.has-custom-image {
+    padding: 0;
+    background: none;
+  }
+
+  .viewport-image-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    background: var(--bg-preview, #0f172a);
+  }
+
+  .preview-custom-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform var(--transition-base, 0.25s ease);
+  }
+
+  :global(.theme-card:hover) .preview-custom-image {
+    transform: scale(1.03);
   }
 
   .viewport-content {

@@ -37,6 +37,7 @@ const breadcrumbs = [
 <BaseLayout
   title={`${post.title} — Thempok Blog`}
   description={post.excerpt}
+  ogImage={post.image ? getRelativePath(post.image) : undefined}
 >
   <article class="blog-post-page">
     <div class="container container-sm">
@@ -68,6 +69,16 @@ const breadcrumbs = [
           </div>
         </div>
       </header>
+
+      {post.image && (
+        <div class="post-featured-image-wrap">
+          <img
+            src={getRelativePath(post.image)}
+            alt={post.title}
+            class="post-featured-image"
+          />
+        </div>
+      )}
 
       <!-- Post Prose Content -->
       <div class="post-body prose">
@@ -294,5 +305,21 @@ const breadcrumbs = [
     color: var(--text-muted);
     margin-top: auto;
     font-weight: 600;
+  }
+
+  .post-featured-image-wrap {
+    margin: 2rem 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .post-featured-image {
+    width: 100%;
+    height: auto;
+    max-height: 480px;
+    object-fit: cover;
+    display: block;
   }
 </style>

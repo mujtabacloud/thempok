@@ -19,6 +19,7 @@ const themes = defineCollection({
     technologies: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
     latest: z.boolean().default(false),
+    image: z.string().optional(),
     author: z.object({
       name: z.string(),
       avatarText: z.string().default('TP'),
@@ -90,6 +91,7 @@ const blog = defineCollection({
     publishDate: z.string(),
     readTime: z.string().default('5 min read'),
     featured: z.boolean().default(false),
+    image: z.string().optional(),
     author: z.object({
       name: z.string(),
       role: z.string().default('Editor'),

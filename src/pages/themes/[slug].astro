@@ -40,6 +40,7 @@ const breadcrumbs = [
 <BaseLayout
   title={`${theme.title} — Free Astro Theme`}
   description={theme.description}
+  ogImage={theme.image ? getRelativePath(theme.image) : undefined}
 >
   <div class="theme-detail-page">
     <div class="container">

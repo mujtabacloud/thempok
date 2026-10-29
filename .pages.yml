@@ -34,6 +34,10 @@ content:
         type: text
         required: true
 
+      - name: image
+        label: Featured Image / Screenshot
+        type: image
+
       - name: category
         label: Category
         type: select
@@ -306,6 +310,10 @@ content:
         label: Short Excerpt
         type: text
         required: true
+
+      - name: image
+        label: Featured Cover Image
+        type: image
 
       - name: category
         label: Category
