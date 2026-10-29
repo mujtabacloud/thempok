@@ -28,9 +28,10 @@ demoUrl: https://demo.thempok.dev/preview/api-hub
 githubUrl: https://github.com/thempok/theme-api-hub
 author:
   name: Alex Rivera
+  avatarText: TP
   url: https://github.com/thempok
 preview:
-  mockupType: browser
+  mockupType: card-grid
   themeColor: "#0b1120"
   accentColor: "#06b6d4"
   heroHeadline: RESTful API v2.4 Reference & SDK Documentation
