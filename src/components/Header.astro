@@ -334,6 +334,18 @@ const isActive = (href: string) => {
     justify-content: center;
   }
 
+  .theme-icon.dark-icon {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .theme-icon.light-icon {
+    display: none;
+  }
+
+  :global([data-theme="dark"]) .theme-icon.dark-icon {
+    display: flex;
+  }
+
   .mobile-toggle {
     width: 38px;
     height: 38px;
