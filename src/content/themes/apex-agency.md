@@ -24,8 +24,8 @@ lastUpdated: October 2026
 license: MIT
 stars: 310
 downloads: 1620
-demoUrl: https://demo.thempok.dev/preview/apex-agency
-githubUrl: https://github.com/thempok/theme-apex-agency
+demoUrl: https://mujtabacloud.github.io/theme-apex-agency/
+githubUrl: https://mujtabacloud.github.io/theme-apex-agency/
 author:
   name: Studio Nova
   avatarText: SN
@@ -54,7 +54,7 @@ highlights:
       screens.
 installCommands:
   create: npm create astro@latest -- --template thempok/apex-agency
-  gitClone: git clone https://github.com/thempok/theme-apex-agency.git my-agency
+  gitClone: git clone https://github.com/mujtabacloud/theme-apex-agency.git my-agency
   install: npm install
   run: npm run dev
 projectStructure:
