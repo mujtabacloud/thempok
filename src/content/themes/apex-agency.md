@@ -31,7 +31,7 @@ author:
   avatarText: SN
   url: https://github.com/thempok
 preview:
-  mockupType: docs
+  mockupType: code
   themeColor: "#0a0f1d"
   accentColor: "#3b82f6"
   heroHeadline: We build digital products that scale businesses.
