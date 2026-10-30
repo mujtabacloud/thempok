@@ -5,6 +5,7 @@ description: The ultimate API reference and developer documentation template.
   Features three-column layout (sidebar, documentation prose, interactive code
   samples), endpoint method badges (GET, POST, DELETE), and response payload
   tabs.
+image: /images/repository-open-graph-template.png
 category: Documentation
 featured: false
 latest: false
